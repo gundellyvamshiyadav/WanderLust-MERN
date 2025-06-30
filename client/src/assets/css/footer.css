@@ -1,0 +1,42 @@
+.f-title {
+    color: #fe424d;
+}
+.footer-custom {
+    background-color: #343a40; 
+    color: #f8f9fa; 
+}
+.text-muted-custom {
+    color: #adb5bd !important; 
+}
+.footer-custom h6 {
+    color: #ffffff; 
+}
+.footer-link {
+    color: #ced4da; 
+    text-decoration: none;
+    transition: color 0.2s ease-in-out, padding-left 0.2s ease-in-out;
+}
+.footer-link:hover {
+    color: #fe424d; 
+    padding-left: 4px; 
+    text-decoration: none; 
+}
+.footer-icon {
+    color: #ced4da;
+    transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+.footer-icon:hover {
+    color: #ffffff; 
+    transform: scale(1.1); 
+}
+.text-danger-custom {
+    color: #fe424d !important;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+.mt-auto {
+    margin-top: auto !important;
+}
