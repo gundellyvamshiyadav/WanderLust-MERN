@@ -57,6 +57,8 @@ const store = MongoStore.create({
 });
 store.on("error", (err) => console.error("SESSION STORE ERROR:", err));
 
+app.set("trust proxy", 1); // Necessary for Render deployment
+
 app.use(session({
   store,
   secret: process.env.SECRET || "this-is-a-super-secret-key",
@@ -66,6 +68,9 @@ app.use(session({
     expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
     maxAge: 7 * 24 * 60 * 60 * 1000,
     httpOnly: true,
+    // +++ THESE ARE THE CRUCIAL LINES FOR PRODUCTION +++
+    sameSite: 'none', // Allows cross-site cookie sending
+    secure: true      // Requires HTTPS, which Render provides
   },
 }));
 
