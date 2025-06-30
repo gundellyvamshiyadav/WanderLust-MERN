@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
 import apiClient from '../api';
 
 const BookingStatusPage = () => {
     const { bookingId } = useParams();
     const { addNotification } = useNotification();
+    const navigate = useNavigate();
     
     const [status, setStatus] = useState('Verifying your payment, please wait...');
     const [isSuccess, setIsSuccess] = useState(null); 
@@ -17,6 +18,9 @@ const BookingStatusPage = () => {
                     method: 'POST',
                     body: JSON.stringify({ bookingId })
                 });
+                if (!data.success) {
+                    throw new Error(data.message || 'Payment verification failed.');
+                }
                 setStatus(data.message);
                 setIsSuccess(true);
             } catch (err) {
@@ -30,6 +34,16 @@ const BookingStatusPage = () => {
         return () => clearTimeout(timer);
 
     }, [bookingId, addNotification]);
+
+     useEffect(() => {
+        if (isSuccess === true) {
+            addNotification("Redirecting to your dashboard...", "success");
+            const timer = setTimeout(() => {
+                navigate('/dashboard');
+            }, 3000); 
+            return () => clearTimeout(timer);
+        }
+    }, [isSuccess, navigate]); 
 
     return (
         <div className="container my-5 text-center">
