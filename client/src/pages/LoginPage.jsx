@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import AuthLayout from '../components/AuthLayout';
+import apiClient from '../api';
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -24,17 +25,10 @@ const LoginPage = () => {
         setError('');
 
         try {
-            const response = await fetch('/api/users/login', {
+            const data = await apiClient('/users/login', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(credentials),
             });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Login failed. Please check your credentials.');
-            }
 
             login(data.user);
             addNotification(data.message || 'Logged in successfully!', 'success');

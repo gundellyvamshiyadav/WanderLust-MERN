@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { FaCommentDots, FaPaperPlane, FaTimes } from 'react-icons/fa';
+import apiClient from '../api';
 
 const Chatbot = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -46,24 +47,18 @@ const Chatbot = () => {
             }));
         history.pop();
         
-        const res = await fetch('/api/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ prompt: userMessage, history: history }),
-        });
-
-        if (!res.ok) {
-            throw new Error('Failed to get response from server.');
-        }
-
-        const data = await res.json();
-        setIsLoading(false); 
+        const data = await apiClient('/chat', {
+                method: 'POST',
+                body: JSON.stringify({ prompt: userMessage, history: history }),
+            });
         handleApiResponse(data);
 
     } catch (error) {
         console.error(error);
         setIsLoading(false); 
         setMessages(prev => [...prev, { from: 'bot', text: 'Sorry, I am having trouble connecting. Please try again later.' }]);
+    } finally {
+            setIsLoading(false); 
     }
 };
 

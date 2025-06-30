@@ -1,6 +1,7 @@
 import React from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const ReviewList = ({ reviews, listingId, onReviewDelete }) => {
     const { curUser } = useAuth();
@@ -10,13 +11,9 @@ const ReviewList = ({ reviews, listingId, onReviewDelete }) => {
         if (!window.confirm("Are you sure you want to delete this review?")) return;
 
         try {
-            const response = await fetch(`/api/listings/${listingId}/reviews/${reviewId}`, {
+            await apiClient(`/listings/${listingId}/reviews/${reviewId}`, {
                 method: 'DELETE',
             });
-            if (!response.ok) {
-                const data = await response.json();
-                throw new Error(data.message || 'Failed to delete review.');
-            }
             addNotification('Review Deleted!', 'success');
             onReviewDelete(reviewId); 
         } catch (err) {

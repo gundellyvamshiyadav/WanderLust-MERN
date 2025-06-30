@@ -5,6 +5,7 @@ import { useNotification } from '../context/NotificationContext';
 import Map from '../components/Map';
 import ReviewForm from '../components/ReviewForm';
 import ReviewList from '../components/ReviewList';
+import apiClient from '../api';
 
 const ShowListingPage = () => {
     const { id } = useParams();
@@ -19,9 +20,7 @@ const ShowListingPage = () => {
         const fetchListing = async () => {
             try {
                 setIsLoading(true);
-                const response = await fetch(`/api/listings/${id}`);
-                if (!response.ok) throw new Error('Listing not found');
-                const data = await response.json();
+                const data = await apiClient(`/listings/${id}`);
                 setListing(data);
             } catch (err) {
                 addNotification(err.message, 'error');
@@ -36,8 +35,7 @@ const ShowListingPage = () => {
     const handleDeleteListing = async () => {
         if (window.confirm('Are you sure you want to delete this listing?')) {
             try {
-                const response = await fetch(`/api/listings/${id}`, { method: 'DELETE' });
-                if (!response.ok) throw new Error('Failed to delete listing');
+                await apiClient(`/listings/${id}`, { method: 'DELETE' });
                 addNotification('Listing deleted successfully!', 'success');
                 navigate('/listings');
             } catch (err) {

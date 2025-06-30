@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api'; 
 
 const subjectOptions = [
   "General Inquiry",
@@ -47,15 +48,10 @@ const SupportPage = () => {
         };
 
         try {
-            const response = await fetch('/api/contact', {
+            await apiClient('/contact', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload),
             });
-            const result = await response.json();
-            if (!response.ok) {
-                throw new Error(result.message || 'Failed to submit request.');
-            }
             addNotification("Your request has been submitted successfully!", 'success');
             setFormData({ subject: "", message: "" });
             navigate('/dashboard');

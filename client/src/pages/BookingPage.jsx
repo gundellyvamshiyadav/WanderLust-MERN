@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const BookingPage = () => {
     const { id: listingId } = useParams();
@@ -27,9 +28,7 @@ const BookingPage = () => {
         const fetchListing = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`/api/listings/${listingId}`);
-                if (!response.ok) throw new Error('Listing not found.');
-                const data = await response.json();
+                const data = await apiClient(`/listings/${listingId}`);
                 setListing(data);
             } catch (err) {
                 addNotification(err.message, 'error');
@@ -72,20 +71,10 @@ const BookingPage = () => {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/bookings/create-order`, {
+            const data = await apiClient(`/bookings/create-order`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ listingId, ...bookingDetails })
             });
-            
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || 'Could not initiate booking.');
-            }
-
-            console.log("--- Received from server in BookingPage ---");
-            console.log(JSON.stringify(data, null, 2));
 
             if (!data.bookingId || !data.paymentSessionId) {
                 throw new Error("Server response is missing required payment details.");

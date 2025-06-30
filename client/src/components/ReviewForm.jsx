@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const ReviewForm = ({ listingId, onReviewSubmit }) => {
     const { addNotification } = useNotification();
@@ -20,15 +21,10 @@ const ReviewForm = ({ listingId, onReviewSubmit }) => {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/listings/${listingId}/reviews`, {
+            const data = await apiClient(`/listings/${listingId}/reviews`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ review: { rating, comment } }),
             });
-            const data = await response.json();
-            if (!response.ok) {
-                throw new Error(data.message || 'Failed to submit review.');
-            }
             addNotification('Review submitted successfully!', 'success');
             onReviewSubmit(data);
             setComment("");

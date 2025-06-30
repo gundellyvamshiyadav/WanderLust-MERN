@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
 import AuthLayout from '../components/AuthLayout';
+import apiClient from '../api'; 
 
 const SignupPage = () => {
     // --- React Hooks & State ---
@@ -33,19 +34,12 @@ const SignupPage = () => {
 
         try {
             // Ensure your server route is /api/users/signup as configured in app.js
-            const response = await fetch('/api/users/signup', {
+            const data = await apiClient('/users/signup', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData),
             });
 
-            const data = await response.json();
-            
-            if (!response.ok) {
-                throw new Error(data.message || 'Signup failed. Please try again.');
-            }
-            
-            login(data.user);
+           login(data.user);
             addNotification(data.message || "Welcome to Wanderlust!", 'success');
             navigate('/');
             

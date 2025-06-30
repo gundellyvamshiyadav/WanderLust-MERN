@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const categories = [
     "Trending", "Rooms", "Iconic cities", "Mountains", "Castles", 
@@ -31,11 +32,7 @@ const EditListingPage = () => {
     useEffect(() => {
         const fetchListingData = async () => {
             try {
-                const response = await fetch(`/api/listings/${id}`);
-                if (!response.ok) {
-                    throw new Error('Listing not found or you do not have permission to edit it.');
-                }
-                const data = await response.json();
+                const data = await apiClient(`/listings/${id}`);
                 setFormData({
                     title: data.title || '',
                     description: data.description || '',
@@ -83,14 +80,10 @@ const EditListingPage = () => {
         }
 
         try {
-            const response = await fetch(`/api/listings/${id}`, {
+            await apiClient(`/listings/${id}`, {
                 method: 'PUT',
                 body: submissionData,
             });
-            const result = await response.json();
-            if (!response.ok) {
-                throw new Error(result.message || 'Failed to update listing.');
-            }
             addNotification('Listing Updated Successfully!', 'success');
             navigate(`/listings/${id}`);
         } catch (err) {

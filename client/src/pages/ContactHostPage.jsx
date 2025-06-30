@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const ContactHostPage = () => {
     const { id: listingId } = useParams();
@@ -20,9 +21,7 @@ const ContactHostPage = () => {
         const fetchListing = async () => {
             setIsLoading(true);
             try {
-                const response = await fetch(`/api/listings/${listingId}`);
-                if (!response.ok) throw new Error('Could not find the listing.');
-                const data = await response.json();
+                const data = await apiClient(`/listings/${listingId}`);
                 setListing(data);
             } catch (err) {
                 addNotification(err.message, 'error');
@@ -46,13 +45,10 @@ const ContactHostPage = () => {
 
         setIsSubmitting(true);
         try {
-            const response = await fetch(`/api/listings/${listingId}/contact`, {
+            await apiClient(`/listings/${listingId}/contact`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message }),
             });
-            const result = await response.json();
-            if (!response.ok) throw new Error(result.message || 'Failed to send message.');
             addNotification("Your message has been sent to the host!", 'success');
             setMessage("");
             navigate(`/listings/${listingId}`);

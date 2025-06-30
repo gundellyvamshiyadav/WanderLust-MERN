@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import axios from 'axios';
 import "../assets/css/PaymentPage.css";
+import apiClient from '../api';
 
 
 const PaymentStatusPage = () => {
@@ -23,9 +23,9 @@ const PaymentStatusPage = () => {
             }
 
             try {
-                const response = await axios.get(`http://localhost:8080/api/payments/verify?order_id=${order_id}&order_token=${order_token || ''}`);
+                const response = await apiClient(`/payments/verify?order_id=${order_id}&order_token=${order_token || ''}`);
 
-                if (response.data.success) {
+                if (response.success) {
                     setPaymentStatus('Success!');
                     setMessage('Your payment was successful. Thank you for your booking!');
                 } else {

@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import ListingCard from '../components/ListingCard';
 import Filters from '../components/Filters';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const ListingsIndexPage = () => {
     const [listings, setListings] = useState([]);
@@ -24,11 +25,7 @@ const ListingsIndexPage = () => {
                 if (activeFilter) params.append('category', activeFilter);
                 if (searchQuery) params.append('search', searchQuery);
 
-                const response = await fetch(`/api/listings?${params.toString()}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch listings.');
-                }
-                const data = await response.json();
+                const data = await apiClient(`/listings?${params.toString()}`);
                 setListings(data);
             } catch (err) {
                 setError(err.message);

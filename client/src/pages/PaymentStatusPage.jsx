@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
+import apiClient from '../api';
 
 const PaymentStatusPage = () => {
   const { bookingId } = useParams();
@@ -10,19 +11,12 @@ const PaymentStatusPage = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const res = await fetch(`/api/bookings/verify-payment`, {
+        const data = await apiClient(`/bookings/verify-payment`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ bookingId }),
         });
-        const data = await res.json();
-        if (data.success) {
-          setStatus("success");
-          setMessage("Payment successful! Your booking is confirmed.");
-        } else {
-          setStatus("failed");
-          setMessage("Payment failed or could not be verified.");
-        }
+        setStatus("success");
+        setMessage(data.message || "Payment successful! Your booking is confirmed.");
       } catch (err) {
         setStatus("failed");
         setMessage("Error verifying payment.");
@@ -35,7 +29,7 @@ const PaymentStatusPage = () => {
     if (status === "success") {
       const timer = setTimeout(() => {
         window.location.href = "/dashboard";
-      }, 2000);
+      }, 3000);
       return () => clearTimeout(timer);
     }
   }, [status]);

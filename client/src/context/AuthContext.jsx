@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
-
+import apiClient from '../api';
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -13,13 +13,8 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkLoggedIn = async () => {
       try {
-        const response = await fetch('/api/users/me'); 
-        if (response.ok) {
-          const user = await response.json();
-          setCurUser(user);
-        } else {
-          setCurUser(null);
-        }
+        const user = await apiClient('/users/me');
+        setCurUser(user);
       } catch (error) {
         console.error("Session check failed:", error);
         setCurUser(null);
@@ -36,7 +31,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await fetch('/api/logout', { method: 'POST' }); 
+      await apiClient('/users/logout', { method: 'POST' });
       setCurUser(null);
     } catch (error) {
       console.error("Logout failed:", error);

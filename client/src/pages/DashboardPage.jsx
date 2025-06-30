@@ -6,6 +6,7 @@ import GuestBookingsTable from '../components/dashboard/GuestBookingsTable';
 import EarningsChart from '../components/dashboard/EarningsChart';
 import StatusPieChart from '../components/dashboard/StatusPieChart';
 import { Link } from 'react-router-dom';
+import apiClient from '../api';
 
 const DashboardPage = ({ curUser }) => { 
     const [data, setData] = useState(null);
@@ -17,12 +18,7 @@ const DashboardPage = ({ curUser }) => {
             setIsLoading(true);
             setError('');
             try {
-                const response = await fetch('/api/dashboard');
-                if (!response.ok) {
-                    const errData = await response.json();
-                    throw new Error(errData.message || 'Could not fetch dashboard data.');
-                }
-                const result = await response.json();
+                const result = await apiClient('/dashboard');
                 setData(result);
             } catch (err) {
                 setError(err.message);

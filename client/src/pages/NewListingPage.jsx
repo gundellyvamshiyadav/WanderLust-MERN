@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useNotification } from '../context/NotificationContext';
+import apiClient from '../api';
 
 const categories = [
     "Trending", "Rooms", "Iconic cities", "Mountains", "Castles", 
@@ -60,17 +61,10 @@ const NewListingPage = () => {
         }
 
         try {
-            const response = await fetch('/api/listings', {
+           const result = await apiClient('/listings', {
                 method: 'POST',
                 body: submissionData,
             });
-            const result = await response.json();
-            if (!response.ok) {
-                if (response.status === 400 && result.message) {
-                    addNotification(result.message, 'error');
-                }
-                throw new Error(result.message || 'Failed to create listing.');
-            }
             addNotification('Listing Created Successfully!', 'success');
             navigate(`/listings/${result._id}`);
         } catch (err) {
