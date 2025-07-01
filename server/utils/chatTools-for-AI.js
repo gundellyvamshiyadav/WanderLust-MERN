@@ -21,43 +21,14 @@ const toolConfig = {
     }
 };
 
-const tools = [
-    {
-        type: "function",
-        function: toolConfig.searchListings
-    },
-    {
-        type: "function",
-        function: toolConfig.getListingDetails
-    },
-    {
-        type: "function",
-        function: toolConfig.checkAvailability
-    },
-    {
-        type: "function",
-        function: toolConfig.startBooking
-    },
-    {
-        type: "function",
-        function: toolConfig.getMyBookings
-    }
-].map(tool => ({
-    type: "function",
-    function: {
-        name: Object.keys(toolConfig).find(key => toolConfig[key] === tool.function),
-        description: tool.function.description,
-        parameters: tool.function.parameters
-    }
-}));
+const geminiTools = [
+  {
+    functionDeclarations: Object.keys(toolConfig).map(toolName => ({
+      name: toolName,
+      description: toolConfig[toolName].description,
+      parameters: toolConfig[toolName].parameters
+    }))
+  }
+];
 
-const openAITools = Object.keys(toolConfig).map(toolName => ({
-    type: "function",
-    function: {
-        name: toolName,
-        description: toolConfig[toolName].description,
-        parameters: toolConfig[toolName].parameters
-    }
-}));
-
-module.exports = openAITools;
+module.exports = geminiTools;
