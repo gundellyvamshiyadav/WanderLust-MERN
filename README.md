@@ -71,9 +71,7 @@ It showcases modern web development features like secure payments, interactive m
 WanderLust-MERN/
 ├── client/         # React frontend (components, pages, context)
 ├── server/         # Express backend (routes, controllers, models)
-├── public/         # Static files
-├── assets/         # Project assets like banner image
-├── .env.example    # Example environment variables
+├── banner
 ├── README.md
 ```
 ## 🎯 Key Libraries & Functionalities
