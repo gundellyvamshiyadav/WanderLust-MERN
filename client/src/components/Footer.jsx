@@ -43,7 +43,9 @@ const Footer = () => {
           </div>
         </div>
         <div className="text-center border-top border-secondary pt-3 mt-3 text-muted-custom small">
-          © {new Date().getFullYear()} <strong>Gundelly Vamshi Yadav</strong> • Made with <span className="text-danger-custom">❤️</span> for WanderLust Explorers
+          © {new Date().getFullYear()} <strong>Gundelly Vamshi Yadav</strong> &nbsp;|&nbsp; All rights reserved.
+          <br />
+          Made with <span className="text-danger-custom">❤️</span> for WanderLust Explorers
         </div>
       </div>
     </footer>
